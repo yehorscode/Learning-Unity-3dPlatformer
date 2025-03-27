@@ -73,7 +73,7 @@ namespace UFPPC
 
         // Variables containing the double jump info
         private int jumpCount = 0;
-        private const int extraJumps = 2;
+        private const int extraJumps = 1;
 
         // Vector responsible for player velocity
         private Vector3 velocity;
@@ -461,3 +461,4 @@ namespace UFPPC
         #endregion
     }
 }
+
