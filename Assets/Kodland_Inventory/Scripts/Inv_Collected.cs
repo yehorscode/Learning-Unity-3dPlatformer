@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Inv_Collected : MonoBehaviour
 {
-    public string name;
+    public string thename;
     public Sprite image;
     private Inv_Inventory inventory;
 
@@ -13,7 +13,7 @@ public class Inv_Collected : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {                 
-        inventory.AddItem(image, name, gameObject);
+        inventory.AddItem(image, thename, gameObject);
     }
 
 }

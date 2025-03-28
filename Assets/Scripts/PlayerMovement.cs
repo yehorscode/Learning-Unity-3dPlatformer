@@ -1,16 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    // Gravity
+    [Header("Gravity & Movement")]
     [SerializeField] float gravity = 5f;
     [SerializeField] float jumpHeight = 5f;
     [SerializeField] float moveSpeed = 14f;
     [SerializeField] float sprintSpeed = 20f;
     [SerializeField] float doubleJumpHeight = 3f;
+    private Rigidbody rb;
 
+    // Jump & Sprint
     private bool isGrounded = true;
     private bool isSprinting = false;
     private bool hasDoubleJump = true;
@@ -18,17 +23,24 @@ public class PlayerMovement : MonoBehaviour
     private float jumpVelocity = 0f;
     private float doubleJumpVelocity = 0f;
 
-    private Rigidbody rb;
+    // Camera
+    [Header("Camera")]
     [SerializeField] Camera playerCamera;
-    private float xRotation = 0f;
 
     // Dashes
+    [Header("Dashes")]
     [SerializeField] float dashLength = 10f;
     [SerializeField] float health = 100f;
+
+    public ActionsManager actionsManager;
+    public TimedLetter timedLetter;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         rb = GetComponent<Rigidbody>();
+        actionsManager = GetComponent<ActionsManager>();
+        timedLetter = GetComponent<TimedLetter>();
     }
 
     void Update()
@@ -40,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Move();
         Jump();
+
     }
 
     void Move()
@@ -57,14 +70,27 @@ public class PlayerMovement : MonoBehaviour
             isSprinting = false;
             moveVelocity = moveSpeed;
         }
+
         if (Input.GetKeyDown(KeyCode.A))
         {
-            transform.position = new Vector3(transform.position.x - dashLength, transform.position.y, transform.position.z);
+            if (!actionsManager.isTimingLetters)
+            { transform.position = new Vector3(transform.position.x - dashLength, transform.position.y, transform.position.z); }
+            else if (actionsManager.isTimingLetters && timedLetter.letter == "a")
+            {
+                actionsManager.ShowWarnText("Timed action active. Press Tab to exit");
+                Invoke("HideInfoText", 1.5f);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            transform.position = new Vector3(transform.position.x + dashLength, transform.position.y, transform.position.z);
-    }
+            if (!actionsManager.isTimingLetters)
+            { transform.position = new Vector3(transform.position.x + dashLength, transform.position.y, transform.position.z); }
+            else if (actionsManager.isTimingLetters && timedLetter.letter == "d")
+            {
+                actionsManager.ShowWarnText("Timed action active. Press Tab to exit");
+                Invoke("HideInfoText", 1.5f);
+            }
+        }
 
         rb.velocity = new Vector3(0, rb.velocity.y, movement.z * moveVelocity);
     }
@@ -86,10 +112,13 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-
     void OnCollisionEnter(Collision collision)
     {
         isGrounded = true;
         hasDoubleJump = true;
+    }
+    void HideInfoText()
+    {
+        actionsManager.HideInfoText();
     }
 }
