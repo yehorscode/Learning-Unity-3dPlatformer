@@ -5,13 +5,11 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float gravity = 9.81f;
+    [SerializeField] float gravity = 5f;
     [SerializeField] float jumpHeight = 5f;
-    [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float sprintSpeed = 9f;
+    [SerializeField] float moveSpeed = 14f;
+    [SerializeField] float sprintSpeed = 20f;
     [SerializeField] float doubleJumpHeight = 3f;
-    [SerializeField] float lookSensitivity = 2f; // Reduced sensitivity
-    [SerializeField] float maxLookAngle = 90f; // Added max look angle
 
     private bool isGrounded = true;
     private bool isSprinting = false;
@@ -61,12 +59,13 @@ public class PlayerMovement : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-            transform.position += new Vector3(-10f, 0, 0);
+            transform.position = new Vector3(transform.position.x - dashLength, transform.position.y, transform.position.z);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            transform.position += new Vector3(10f, 0, 0);
-        }
+            transform.position = new Vector3(transform.position.x + dashLength, transform.position.y, transform.position.z);
+    }
+
         rb.velocity = new Vector3(0, rb.velocity.y, movement.z * moveVelocity);
     }
     void Jump()
