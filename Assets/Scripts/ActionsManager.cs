@@ -52,6 +52,7 @@ public class ActionsManager : MonoBehaviour
         {
             timedLettersCanvas.SetActive(false);
         }
+        // Note! To reset it use ResetSlider() from TimedClick.cs
         if (isTimingClicks)
         {
             timedClicksCanvas.SetActive(true);

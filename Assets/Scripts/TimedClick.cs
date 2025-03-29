@@ -11,6 +11,7 @@ public class TimedClick : MonoBehaviour
     private bool hasScored = false;
     [SerializeField] AudioClip clickSound;
     [SerializeField] AudioSource audioSource;
+    [SerializeField] public ActionsManager actionsManager;
     void Start()
     {
         slider.minValue = 0f;
@@ -20,35 +21,41 @@ public class TimedClick : MonoBehaviour
 
     void Update()
     {
-        if (isMovingRight)
+        if (actionsManager.isTimingClicks)
         {
-            slider.value += sliderSpeed * Time.deltaTime;
-            if (slider.value >= 100f)
+            if (isMovingRight && !hasScored)
             {
-                isMovingRight = false;
+                slider.value += sliderSpeed * Time.deltaTime;
+                if (slider.value >= 100f)
+                {
+                    isMovingRight = false;
+                }
             }
-        }
-        else
-        {
-            slider.value -= sliderSpeed * Time.deltaTime;
-            if (slider.value <= 0f)
+            else if (!isMovingRight && !hasScored)
             {
-                isMovingRight = true;
+                slider.value -= sliderSpeed * Time.deltaTime;
+                if (slider.value <= 0f)
+                {
+                    isMovingRight = true;
+                }
             }
-        }
 
-        // Check for player input
-        if (Input.anyKeyDown && !hasScored)
-        {
-            AudioSource.PlayClipAtPoint(clickSound, transform.position);
-            CalculateScore();
-            hasScored = true; // Prevent multiple scoring
-
-            // You might want to add logic here to reset or move to next challenge
-            // For example: Invoke("ResetSlider", 2f);
+            // Check for player input
+            if (Input.anyKeyDown && !hasScored)
+            {
+                AudioSource.PlayClipAtPoint(clickSound, transform.position);
+                CalculateScore();
+                hasScored = true;
+                Invoke("HideCanva", 0.5f);
+                                  // You might want to add logic here to reset or move to next challenge
+                                  // For example: Invoke("ResetSlider", 2f);
+            }
         }
     }
-
+    void HideCanva()
+    {
+        actionsManager.isTimingClicks = false;
+    }
     void CalculateScore()
     {
         float currentValue = slider.value;

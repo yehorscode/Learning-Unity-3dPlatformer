@@ -34,13 +34,15 @@ public class PlayerMovement : MonoBehaviour
 
     public ActionsManager actionsManager;
     public TimedLetter timedLetter;
+    public PlayerManager playerManager;
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.None;
         rb = GetComponent<Rigidbody>();
         actionsManager = GetComponent<ActionsManager>();
         timedLetter = GetComponent<TimedLetter>();
+        playerManager = GetComponent<PlayerManager>();
     }
 
     void Update()
@@ -57,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
-        if (actionsManager.isTimedEvent)
+        if (actionsManager.isTimedEvent || playerManager.isDead)
         {
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
             return;
