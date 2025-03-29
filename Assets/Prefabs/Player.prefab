@@ -346,7 +346,7 @@ RectTransform:
   m_Father: {fileID: 6245445850110363180}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.266, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -533,7 +533,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5996385066549408515
 RectTransform:
   m_ObjectHideFlags: 0
@@ -764,8 +764,9 @@ GameObject:
   - component: {fileID: 726592315602162299}
   - component: {fileID: 7939652353391118403}
   - component: {fileID: 8301126283005001544}
-  - component: {fileID: 8164384511599847666}
   - component: {fileID: 8037428592755685591}
+  - component: {fileID: 8164384511599847666}
+  - component: {fileID: 8875703516366547427}
   - component: {fileID: 1363757828631847499}
   - component: {fileID: 7506407126074687088}
   - component: {fileID: 1958678736973755082}
@@ -785,7 +786,7 @@ Transform:
   m_GameObject: {fileID: 5122347269333886619}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -865,8 +866,29 @@ MonoBehaviour:
   playerCamera: {fileID: 3576560535074094177}
   dashLength: 10
   health: 100
-  actionsManager: {fileID: 0}
-  timedLetter: {fileID: 0}
+  actionsManager: {fileID: 8037428592755685591}
+  timedLetter: {fileID: 8164384511599847666}
+--- !u!114 &8037428592755685591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5122347269333886619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5670c944b9e563b807294221fa673c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTimedEvent: 0
+  isTimingLetters: 0
+  timedLettersCanvas: {fileID: 1049158956772927464}
+  isTimingClicks: 1
+  timedClicksCanvas: {fileID: 3179242123551351403}
+  infoCanvas: {fileID: 8043685231778462267}
+  warnText: {fileID: 6298215754357247725}
+  warnTextContent: Empty warning text
+  showWarnText: 0
 --- !u!114 &8164384511599847666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -883,7 +905,8 @@ MonoBehaviour:
   letterText: {fileID: 3490492368109027384}
   correctSound: {fileID: 8300000, guid: 6401e94e00f7e8a988b5f2216254e65b, type: 3}
   wrongSound: {fileID: 8300000, guid: 68db607b94886502d8ddfbae21e8359f, type: 3}
---- !u!114 &8037428592755685591
+  actionsManager: {fileID: 8037428592755685591}
+--- !u!114 &8875703516366547427
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -892,17 +915,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5122347269333886619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a5670c944b9e563b807294221fa673c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d20f3090a5393a3e9873d9ce4555be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTimingLetters: 0
-  timedLettersCanvas: {fileID: 1049158956772927464}
-  isTimingClicks: 0
-  timedClicksCanvas: {fileID: 0}
-  infoCanvas: {fileID: 8043685231778462267}
-  warnText: {fileID: 6298215754357247725}
-  warnTextContent: Empty warning text
-  showWarnText: 0
+  slider: {fileID: 5985488069869011494}
+  score: 0
+  sliderSpeed: 50
+  isMovingRight: 1
+  clickSound: {fileID: 8300000, guid: 6e034dc5b37e92ff0af490b7fc88b4fd, type: 3}
+  audioSource: {fileID: 1958678736973755082}
 --- !u!136 &1363757828631847499
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1209,8 +1230,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3354086299419366588}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.266, y: 0}
+  m_AnchorMax: {x: 0.266, y: 1}
   m_AnchoredPosition: {x: 0, y: 0.3}
   m_SizeDelta: {x: 19.2227, y: 0.6}
   m_Pivot: {x: 0.5, y: 0.5}

@@ -5,43 +5,90 @@ using UnityEngine.UI;
 public class TimedClick : MonoBehaviour
 {
     [SerializeField] Slider slider;
-    float score = 0;
+    public float score = 0;
+    public float sliderSpeed = 50f;
+    public bool isMovingRight = true;
+    private bool hasScored = false;
+    [SerializeField] AudioClip clickSound;
+    [SerializeField] AudioSource audioSource;
     void Start()
     {
-        slider.value = 0;
+        slider.minValue = 0f;
+        slider.maxValue = 100f;
+        slider.value = 0f;
     }
+
     void Update()
     {
-        if (Input.anyKeyDown)
+        if (isMovingRight)
         {
-            if (slider.value < 25)
+            slider.value += sliderSpeed * Time.deltaTime;
+            if (slider.value >= 100f)
             {
-                score = 1;
-            }
-            if (slider.value > 25 && slider.value < 35)
-            {
-                score = 2;
-            }
-            if (slider.value > 35 && slider.value < 45)
-            {
-                score = 3;
-            }
-            if (slider.value > 45 && slider.value < 55)
-            {
-                score = 4;
-            }
-            if (slider.value > 55 && slider.value < 65)
-            {
-                score = 3;
-            }
-            if (slider.value > 65 && slider.value < 75)
-            {
-                score = 2;
-            }
-            if (slider.value > 75)
-            {
-                score = 1;
+                isMovingRight = false;
             }
         }
+        else
+        {
+            slider.value -= sliderSpeed * Time.deltaTime;
+            if (slider.value <= 0f)
+            {
+                isMovingRight = true;
+            }
+        }
+
+        // Check for player input
+        if (Input.anyKeyDown && !hasScored)
+        {
+            AudioSource.PlayClipAtPoint(clickSound, transform.position);
+            CalculateScore();
+            hasScored = true; // Prevent multiple scoring
+
+            // You might want to add logic here to reset or move to next challenge
+            // For example: Invoke("ResetSlider", 2f);
+        }
+    }
+
+    void CalculateScore()
+    {
+        float currentValue = slider.value;
+
+        if (currentValue < 25f)
+        {
+            score = 1;
+        }
+        else if (currentValue >= 25f && currentValue < 35f)
+        {
+            score = 2;
+        }
+        else if (currentValue >= 35f && currentValue < 45f)
+        {
+            score = 3;
+        }
+        else if (currentValue >= 45f && currentValue < 55f)
+        {
+            score = 4;
+        }
+        else if (currentValue >= 55f && currentValue < 65f)
+        {
+            score = 3;
+        }
+        else if (currentValue >= 65f && currentValue < 75f)
+        {
+            score = 2;
+        }
+        else
+        {
+            score = 1;
+        }
+
+        Debug.Log("Score: " + score + " at value: " + currentValue);
+    }
+
+    public void ResetSlider()
+    {
+        hasScored = false;
+        slider.value = 0f;
+        isMovingRight = true;
     }
 }

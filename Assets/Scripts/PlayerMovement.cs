@@ -57,6 +57,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
+        if (actionsManager.isTimedEvent)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            return;
+        }
+
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 movement = transform.forward * verticalInput;
 
@@ -73,29 +79,22 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            if (!actionsManager.isTimingLetters)
-            { transform.position = new Vector3(transform.position.x - dashLength, transform.position.y, transform.position.z); }
-            else if (actionsManager.isTimingLetters && timedLetter.letter == "a")
-            {
-                actionsManager.ShowWarnText("Timed action active. Press Tab to exit");
-                Invoke("HideInfoText", 1.5f);
-            }
+            transform.position = new Vector3(transform.position.x - dashLength, transform.position.y, transform.position.z);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            if (!actionsManager.isTimingLetters)
-            { transform.position = new Vector3(transform.position.x + dashLength, transform.position.y, transform.position.z); }
-            else if (actionsManager.isTimingLetters && timedLetter.letter == "d")
-            {
-                actionsManager.ShowWarnText("Timed action active. Press Tab to exit");
-                Invoke("HideInfoText", 1.5f);
-            }
+            transform.position = new Vector3(transform.position.x + dashLength, transform.position.y, transform.position.z);
         }
 
         rb.velocity = new Vector3(0, rb.velocity.y, movement.z * moveVelocity);
     }
     void Jump()
     {
+        if (actionsManager.isTimedEvent)
+        {
+            return;
+        }
+
         if (Input.GetButtonDown("Jump"))
         {
             if (isGrounded)

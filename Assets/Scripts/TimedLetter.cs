@@ -1,12 +1,13 @@
 using TMPro;
 using UnityEngine;
 public class TimedLetter : MonoBehaviour
-{   
+{
     public string letter;
     [SerializeField] TMP_Text letterText;
     AudioSource audioSource;
     [SerializeField] AudioClip correctSound;
     [SerializeField] AudioClip wrongSound;
+    public ActionsManager actionsManager;
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -14,16 +15,19 @@ public class TimedLetter : MonoBehaviour
     }
     void Update()
     {
-        if(Input.anyKeyDown)
+        if (actionsManager.isTimingLetters)
         {
-            if(Input.GetKeyDown(letter.ToLower()))
+            if (Input.anyKeyDown)
             {
-                audioSource.PlayOneShot(correctSound, transform.position.y);
-                GetLetter();
-            }
-            else
-            {
-                audioSource.PlayOneShot(wrongSound, transform.position.y);
+                if (Input.GetKeyDown(letter.ToLower()))
+                {
+                    audioSource.PlayOneShot(correctSound, transform.position.y);
+                    GetLetter();
+                }
+                else
+                {
+                    audioSource.PlayOneShot(wrongSound, transform.position.y);
+                }
             }
         }
     }

@@ -5,22 +5,26 @@ public class ActionsManager : MonoBehaviour
 {
     // Timed actions config
     [Header("Timed Actions")]
+    [SerializeField] public bool isTimedEvent = false;
+
     // Timed letters
     [Header("Timed Letters")]
     [SerializeField] public bool isTimingLetters = false;
     [SerializeField] GameObject timedLettersCanvas;
+
     // Timed clicks (Slider)
     [Header("Timed Clicks (Slider)")]
-    [SerializeField] public bool isTimingClicks = false;
+    [SerializeField] public bool isTimingClicks = true;
     [SerializeField] GameObject timedClicksCanvas;
+
     // Texts
     [Header("Info canvas")]
     [SerializeField] GameObject infoCanvas;
+
     // Warn text
     [Header("Warn Text")]
     [SerializeField] TMP_Text warnText;
     [SerializeField] public string warnTextContent = "Empty warning text";
-
     [SerializeField] public bool showWarnText = false;
 
     void Start()
@@ -30,6 +34,14 @@ public class ActionsManager : MonoBehaviour
     void Update()
     {
         TimedActions();
+        if (isTimingClicks || isTimingLetters)
+        {
+            isTimedEvent = true;
+        }
+        else if (!isTimingClicks && !isTimingLetters)
+        {
+            isTimedEvent = false;
+        }
     }
     void TimedActions(){
         if (isTimingLetters)
@@ -40,6 +52,13 @@ public class ActionsManager : MonoBehaviour
         {
             timedLettersCanvas.SetActive(false);
         }
+        if (isTimingClicks)
+        {
+            timedClicksCanvas.SetActive(true);
+        }
+        else {
+            timedClicksCanvas.SetActive(false);
+        }
     }
     public void ShowWarnText(string content)
     {
@@ -47,6 +66,7 @@ public class ActionsManager : MonoBehaviour
         warnText.text = content;
         warnTextContent = content;
         showWarnText = true;
+        Invoke("HideInfoText", 1.5f);
     }
     public void HideInfoText()
     {
