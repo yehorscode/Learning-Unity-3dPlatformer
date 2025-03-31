@@ -26,10 +26,16 @@ public class ActionsManager : MonoBehaviour
     [SerializeField] TMP_Text warnText;
     [SerializeField] public string warnTextContent = "Empty warning text";
     [SerializeField] public bool showWarnText = false;
-
+    // Tooltip text
+    [Header("Info Text")]
+    [SerializeField] TMP_Text infoText;
+    [SerializeField] public string infoTextContent = "Empty warning text";
+    [SerializeField] public bool showInfoText = false;
     void Start()
     {
         infoCanvas.SetActive(false);
+        infoText.text = "";
+        warnText.text = "";
     }
     void Update()
     {
@@ -68,9 +74,20 @@ public class ActionsManager : MonoBehaviour
         warnTextContent = content;
         showWarnText = true;
         Invoke("HideInfoText", 1.5f);
+        warnTextContent = "";
     }
     public void HideInfoText()
     {
         infoCanvas.SetActive(false);
+        
+    }
+    public void ShowInfoText(string content)
+    {
+        infoCanvas.SetActive(true);
+        infoText.text = content;
+        infoTextContent = content;
+        showWarnText = true;
+        Invoke("HideInfoText", 2.5f);
+        infoTextContent = "";
     }
 }
