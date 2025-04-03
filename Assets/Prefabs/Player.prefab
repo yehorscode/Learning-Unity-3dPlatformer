@@ -1094,10 +1094,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1917644503398234617}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 430.06744, y: 209.56744}
-  m_SizeDelta: {x: 157.8651, y: 157.8651}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -78.932556, y: -78.932556}
+  m_SizeDelta: {x: 157.86511, y: 157.86511}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6157913328157732253
 CanvasRenderer:
@@ -1786,8 +1786,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5122347269333886619}
+  audioSource: {fileID: 1958678736973755082}
   deathCanvas: {fileID: 3403200446983840487}
   isDead: 0
+  deathSound: {fileID: 8300000, guid: 435ebfa641fefd43891bbf66675c8746, type: 3}
 --- !u!136 &1363757828631847499
 CapsuleCollider:
   m_ObjectHideFlags: 0
