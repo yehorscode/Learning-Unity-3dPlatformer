@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float moveSpeed = 14f;
     [SerializeField] float sprintSpeed = 20f;
     [SerializeField] float doubleJumpHeight = 3f;
+    bool isJumping;
     private Rigidbody rb;
 
     // Jump & Sprint
@@ -23,18 +24,23 @@ public class PlayerMovement : MonoBehaviour
     private float jumpVelocity = 0f;
     private float doubleJumpVelocity = 0f;
 
-    // Camera
-    [Header("Camera")]
-    [SerializeField] Camera playerCamera;
-
     // Dashes
     [Header("Dashes")]
     [SerializeField] float dashLength = 10f;
     [SerializeField] float health = 100f;
 
+    [Header("Cameras")]
+    [SerializeField] bool logicOverride = false;
+    [SerializeField] Camera forwardCamera;
+    [SerializeField] Camera backCamera;
+    [SerializeField] Camera leftCamera;
+    [SerializeField] Camera rightCamera;
+
+    [Header("Scripts")]
     public ActionsManager actionsManager;
     public TimedLetter timedLetter;
     public PlayerManager playerManager;
+    public VignetteEffect vignetteEffect;
 
     void Start()
     {
@@ -43,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
         actionsManager = GetComponent<ActionsManager>();
         timedLetter = GetComponent<TimedLetter>();
         playerManager = GetComponent<PlayerManager>();
+        vignetteEffect = GetComponent<VignetteEffect>();
     }
 
     void Update()
@@ -54,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Move();
         Jump();
-
     }
 
     void Move()
@@ -62,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
         if (actionsManager.isTimedEvent || playerManager.isDead)
         {
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            EnableOnlyCamera(forwardCamera);
             return;
         }
 
@@ -79,17 +86,28 @@ public class PlayerMovement : MonoBehaviour
             moveVelocity = moveSpeed;
         }
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (verticalInput >= 0) 
+        {
+            EnableOnlyCamera(forwardCamera);
+        }
+        else
+        {
+            EnableOnlyCamera(backCamera);
+        }
+
+        // Dash logic (left & right)
+        if (Input.GetKeyDown(KeyCode.A)) // Dash left
         {
             transform.position = new Vector3(transform.position.x - dashLength, transform.position.y, transform.position.z);
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D)) // Dash right
         {
             transform.position = new Vector3(transform.position.x + dashLength, transform.position.y, transform.position.z);
         }
 
         rb.velocity = new Vector3(0, rb.velocity.y, movement.z * moveVelocity);
     }
+
     void Jump()
     {
         if (actionsManager.isTimedEvent)
@@ -102,24 +120,63 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded)
             {
                 isGrounded = false;
+                isJumping = true;
                 jumpVelocity = Mathf.Sqrt(jumpHeight * 2 * gravity);
                 rb.AddForce(Vector3.up * jumpVelocity, ForceMode.VelocityChange);
             }
             else if (hasDoubleJump)
             {
                 hasDoubleJump = false;
+                isJumping = true;
                 doubleJumpVelocity = Mathf.Sqrt(doubleJumpHeight * 2 * gravity);
                 rb.AddForce(Vector3.up * doubleJumpVelocity, ForceMode.VelocityChange);
             }
         }
     }
+
     void OnCollisionEnter(Collision collision)
     {
         isGrounded = true;
         hasDoubleJump = true;
+        isJumping = false;
     }
+
     void HideInfoText()
     {
         actionsManager.HideInfoText();
     }
+
+    void EnableOnlyCamera(Camera camToEnable)
+    {
+        vignetteEffect.ActivateVignette();
+        
+        DisableAllCameras(camToEnable);
+
+        if (camToEnable != null)
+            camToEnable.enabled = true;
+    }
+
+    void DisableAllCameras(Camera camToNotDisable)
+    {
+        if (forwardCamera != camToNotDisable)
+        {
+            forwardCamera.enabled = false;
+        }
+
+        if (backCamera != camToNotDisable)
+        {
+            backCamera.enabled = false;
+        }
+
+        if (leftCamera != camToNotDisable)
+        {
+            leftCamera.enabled = false;
+        }
+
+        if (rightCamera != camToNotDisable)
+        {
+            rightCamera.enabled = false;
+        }
+    }
+
 }

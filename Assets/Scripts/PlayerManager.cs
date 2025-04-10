@@ -14,8 +14,12 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] GameObject deathCanvas;
     [SerializeField] public bool isDead = false;
     [SerializeField] AudioClip deathSound;
+
+    [Header("Respawn Handling")]
+    [SerializeField] public Vector3 respawnPoint;
     void Start()
-    {
+    {   
+        respawnPoint = player.transform.position;
         deathCanvas.SetActive(false);
     }
     public void Die()
@@ -31,6 +35,7 @@ public class PlayerManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         isDead = false;
         Cursor.lockState = CursorLockMode.None;
+        player.transform.position = respawnPoint;
     }
 }
 

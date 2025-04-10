@@ -1,17 +1,17 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TimedClick : MonoBehaviour
 {
     [SerializeField] Slider slider;
-    public float score = 0;
-    public float sliderSpeed = 50f;
+    public float sliderSpeed = 100f;
     public bool isMovingRight = true;
     private bool hasScored = false;
     [SerializeField] AudioClip clickSound;
     [SerializeField] AudioSource audioSource;
     [SerializeField] public ActionsManager actionsManager;
+    private float score = 0f;
+
     void Start()
     {
         slider.minValue = 0f;
@@ -21,75 +21,72 @@ public class TimedClick : MonoBehaviour
 
     void Update()
     {
-        if (actionsManager.isTimingClicks)
+        if (!actionsManager.isTimingClicks || hasScored)
         {
-            if (isMovingRight && !hasScored)
-            {
-                slider.value += sliderSpeed * Time.deltaTime;
-                if (slider.value >= 100f)
-                {
-                    isMovingRight = false;
-                }
-            }
-            else if (!isMovingRight && !hasScored)
-            {
-                slider.value -= sliderSpeed * Time.deltaTime;
-                if (slider.value <= 0f)
-                {
-                    isMovingRight = true;
-                }
-            }
+            return;
+        }
 
-            // Check for player input
-            if (Input.anyKeyDown && !hasScored)
+        // Move the slider back and forth
+        if (isMovingRight)
+        {
+            slider.value += sliderSpeed * Time.deltaTime;
+            if (slider.value >= 100f)
             {
-                AudioSource.PlayClipAtPoint(clickSound, transform.position);
-                CalculateScore();
-                hasScored = true;
-                Invoke("HideCanva", 0.5f);
-                                  // You might want to add logic here to reset or move to next challenge
-                                  // For example: Invoke("ResetSlider", 2f);
+                isMovingRight = false;
             }
         }
+        else
+        {
+            slider.value -= sliderSpeed * Time.deltaTime;
+            if (slider.value <= 0f)
+            {
+                isMovingRight = true;
+            }
+        }
+
+        // Handle player input
+        if (Input.anyKeyDown)
+        {
+            AudioSource.PlayClipAtPoint(clickSound, transform.position);
+            score = CalculateScore();
+            hasScored = true;
+            Invoke("HideCanvas", 0.5f);
+        }
     }
-    void HideCanva()
-    {
-        actionsManager.isTimingClicks = false;
-    }
-    void CalculateScore()
+
+    float CalculateScore()
     {
         float currentValue = slider.value;
 
         if (currentValue < 25f)
-        {
-            score = 1;
-        }
-        else if (currentValue >= 25f && currentValue < 35f)
-        {
-            score = 2;
-        }
-        else if (currentValue >= 35f && currentValue < 45f)
-        {
-            score = 3;
-        }
-        else if (currentValue >= 45f && currentValue < 55f)
-        {
-            score = 4;
-        }
-        else if (currentValue >= 55f && currentValue < 65f)
-        {
-            score = 3;
-        }
-        else if (currentValue >= 65f && currentValue < 75f)
-        {
-            score = 2;
-        }
+            return 1;
+        else if (currentValue < 35f)
+            return 2;
+        else if (currentValue < 45f)
+            return 3;
+        else if (currentValue < 55f)
+            return 4;
+        else if (currentValue < 65f)
+            return 3;
+        else if (currentValue < 75f)
+            return 2;
         else
-        {
-            score = 1;
-        }
+            return 1;
+    }
 
-        Debug.Log("Score: " + score + " at value: " + currentValue);
+    void HideCanvas()
+    {
+        actionsManager.isTimingClicks = false;
+    }
+
+    public bool HasScored()
+    {
+        return hasScored;
+    }
+
+    public float GetScore()
+    {
+        return score;
     }
 
     public void ResetSlider()
