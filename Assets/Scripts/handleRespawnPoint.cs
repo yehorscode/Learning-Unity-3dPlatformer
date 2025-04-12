@@ -12,10 +12,10 @@ public class handleRespawnPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.tag == "Player")
         {
             print("RESPAWN POINT SET");
-            playerManager.respawnPoint = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+            playerManager.respawnPoint = new Vector3(transform.position.x, transform.position.y+1, transform.position.z);
             actionsManager.ShowWarnText("Respawn Point Set");
         }
     }

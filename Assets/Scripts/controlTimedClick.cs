@@ -5,12 +5,22 @@ public class controlTimedClick : MonoBehaviour
 {
     [Header("What object to delete on correct answer")]
     [SerializeField] GameObject deletingObject;
-    [SerializeField] TimedClick click;
+
+    ActionsManager actionsManager;
+    TimedClick click;
+
+    private void Start()
+    {
+        actionsManager = GetComponent<ActionsManager>();
+        click = GetComponent<TimedClick>();
+    }
+
 
     void OnTriggerEnter(Collider other)
     {
-        ActionsManager actionsManager = other.gameObject.GetComponent<ActionsManager>();
-        click.ResetSlider();
+        click = other.GetComponent<TimedClick>();
+        actionsManager = other.GetComponent<ActionsManager>();
+        click?.ResetSlider();
         actionsManager.isTimingClicks = !actionsManager.isTimingClicks;
         if (click != null)
         {
@@ -43,3 +53,4 @@ public class controlTimedClick : MonoBehaviour
         }
     }
 }
+

@@ -15,6 +15,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float doubleJumpHeight = 3f;
     bool isJumping;
     private Rigidbody rb;
+    bool isBlocked = false;
+    // If true = then its forward, if false = then its backwards
+    bool prevDirection = true;
 
     // Jump & Sprint
     private bool isGrounded = true;
@@ -75,6 +78,16 @@ public class PlayerMovement : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 movement = transform.forward * verticalInput;
 
+        // Vignette effect
+        if (Input.GetKeyDown(KeyCode.W) && !prevDirection)
+        {
+            vignetteEffect.ActivateVignette();
+        }
+        else if (Input.GetKeyDown(KeyCode.S) && prevDirection)
+        {
+            vignetteEffect.ActivateVignette();
+        }
+
         if (Input.GetButton("Sprint"))
         {
             isSprinting = true;
@@ -86,23 +99,39 @@ public class PlayerMovement : MonoBehaviour
             moveVelocity = moveSpeed;
         }
 
-        if (verticalInput >= 0) 
+        if (verticalInput >= 0)
         {
+            prevDirection = true;
             EnableOnlyCamera(forwardCamera);
         }
         else
         {
+            prevDirection = false;
             EnableOnlyCamera(backCamera);
         }
 
         // Dash logic (left & right)
-        if (Input.GetKeyDown(KeyCode.A)) // Dash left
+        if (Input.GetKeyDown(KeyCode.A) && !isBlocked) // Dash left
         {
-            transform.position = new Vector3(transform.position.x - dashLength, transform.position.y, transform.position.z);
+            if (verticalInput >= 0)
+            {
+                transform.position = new Vector3(transform.position.x - dashLength, transform.position.y, transform.position.z);
+            }
+            else
+            {
+                transform.position = new Vector3(transform.position.x + dashLength, transform.position.y, transform.position.z);
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.D)) // Dash right
+        else if (Input.GetKeyDown(KeyCode.D) && !isBlocked) // Dash right
         {
-            transform.position = new Vector3(transform.position.x + dashLength, transform.position.y, transform.position.z);
+            if (verticalInput >= 0)
+            {
+                transform.position = new Vector3(transform.position.x + dashLength, transform.position.y, transform.position.z);
+            }
+            else
+            {
+                transform.position = new Vector3(transform.position.x - dashLength, transform.position.y, transform.position.z);
+            }
         }
 
         rb.velocity = new Vector3(0, rb.velocity.y, movement.z * moveVelocity);
@@ -139,6 +168,19 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = true;
         hasDoubleJump = true;
         isJumping = false;
+        isBlocked = false;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Block")
+        {
+            isBlocked = true;
+        }
+        else if (other.tag == "InstaKill")
+        {
+            playerManager.Die();
+        }
     }
 
     void HideInfoText()
@@ -148,8 +190,6 @@ public class PlayerMovement : MonoBehaviour
 
     void EnableOnlyCamera(Camera camToEnable)
     {
-        vignetteEffect.ActivateVignette();
-        
         DisableAllCameras(camToEnable);
 
         if (camToEnable != null)

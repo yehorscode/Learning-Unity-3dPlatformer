@@ -17,11 +17,13 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Respawn Handling")]
     [SerializeField] public Vector3 respawnPoint;
+
     void Start()
     {   
         respawnPoint = player.transform.position;
         deathCanvas.SetActive(false);
     }
+
     public void Die()
     {
         deathCanvas.SetActive(true);
@@ -30,12 +32,20 @@ public class PlayerManager : MonoBehaviour
         audioSource.Play();
     }
 
-    public void Restart()
+    public void RespawnAtSpawnPoint(Vector3 spawnPoint)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        player.transform.position = spawnPoint;
         isDead = false;
         Cursor.lockState = CursorLockMode.None;
+        deathCanvas.SetActive(false);
+    }
+
+    public void Restart()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        isDead = false;
         player.transform.position = respawnPoint;
+        deathCanvas.SetActive(false);
     }
 }
 

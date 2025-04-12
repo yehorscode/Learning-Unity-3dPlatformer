@@ -1,52 +1,40 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class VignetteEffect : MonoBehaviour
 {
-    [SerializeField]public Canvas vignetteCanvas; // Reference to the Canvas
-    [SerializeField] public Image vignetteImage;  // Reference to the Image component used for the vignette
-    public float fadeDuration = 1f; // Duration of the fade-out effect
+    [SerializeField] public Canvas vignetteCanvas;
+    [SerializeField] public Image vignetteImage;
+    [SerializeField] public float fadeInTime = 1f;
 
     void Start()
     {
-        // Ensure the vignette image is hidden initially (transparent)
-        vignetteImage.color = new Color(0, 0, 0, 0);
         vignetteCanvas.gameObject.SetActive(false);
-
+        vignetteImage.color = new Color(vignetteImage.color.r, vignetteImage.color.g, vignetteImage.color.b, 1f);
     }
 
     public void ActivateVignette()
     {
         vignetteCanvas.gameObject.SetActive(true);
-        StartCoroutine(VignetteTransition());
+        Invoke("DeactivateVignette", fadeInTime);
+        StartCoroutine(FadeOut());
     }
 
-    private IEnumerator VignetteTransition()
-{
-    // Show the vignette effect instantly
-    vignetteImage.color = new Color(0, 0, 0, 0.6f); // Adjust alpha to control vignette intensity (0.6f is an example)
-
-    // Wait for 0.1 seconds
-    yield return new WaitForSeconds(0.1f);
-
-    // Fade the vignette away
-    float timeElapsed = 0f;
-    Color initialColor = vignetteImage.color;
-    Color targetColor = new Color(0, 0, 0, 0);
-
-    while (timeElapsed < fadeDuration)
+    public void DeactivateVignette()
     {
-        vignetteImage.color = Color.Lerp(initialColor, targetColor, timeElapsed / fadeDuration);
-        timeElapsed += Time.deltaTime;
-        yield return null;
+        vignetteCanvas.gameObject.SetActive(false);
     }
 
-    // Ensure the vignette is completely transparent at the end
-    vignetteImage.color = targetColor;
-
-    // Disable the canvas after the fade-out is complete
-    vignetteCanvas.gameObject.SetActive(false);
+    IEnumerator FadeOut()
+    {
+        float alpha = 1f;
+        while (alpha > 0f)
+        {
+            vignetteImage.color = new Color(vignetteImage.color.r, vignetteImage.color.g, vignetteImage.color.b, alpha);
+            alpha -= Time.deltaTime / fadeInTime;
+            yield return null;
+        }
+    }
 }
 
-}

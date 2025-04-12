@@ -1980,7 +1980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vignetteCanvas: {fileID: 5292625084506023180}
   vignetteImage: {fileID: 2091037524947198992}
-  fadeDuration: 1
+  fadeInTime: 0.1
 --- !u!136 &1363757828631847499
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2575,7 +2575,7 @@ GameObject:
   - component: {fileID: 4322006364837217002}
   - component: {fileID: 2091037524947198992}
   m_Layer: 0
-  m_Name: Vignette
+  m_Name: VignetteIMAGE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3029,7 +3029,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4750825417373538818
 RectTransform:
   m_ObjectHideFlags: 0
