@@ -5,6 +5,7 @@ public class Jumppad : MonoBehaviour
     [SerializeField] float jumpForce = 20f;
     [SerializeField] Vector3 jumpDirection = Vector3.up;
     [SerializeField] bool resetVelocity = true;
+    [SerializeField] AudioClip jumpSound;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -23,6 +24,11 @@ public class Jumppad : MonoBehaviour
                 }
                 
                 // Apply the jump force in the specified direction
+                // Play the jump sound effect if it was assigned
+                if (jumpSound != null)
+                {
+                    AudioSource.PlayClipAtPoint(jumpSound, transform.position);
+                }
                 playerRigidbody.AddForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse);
             }
             else

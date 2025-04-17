@@ -8,6 +8,7 @@ TagManager:
   - MiniCamera
   - Block
   - InstaKill
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Ground
   - LimitBottom
   - WalkableThrought
-  - 
+  - PostProcess
   - 
   - 
   - 

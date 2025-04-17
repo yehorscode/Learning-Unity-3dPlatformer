@@ -8,6 +8,10 @@ public class TimedLetter : MonoBehaviour
     [SerializeField] AudioClip correctSound;
     [SerializeField] AudioClip wrongSound;
     public ActionsManager actionsManager;
+    int correctClicks = 0;
+    int wrongClicks = 0;
+    [SerializeField] TMP_Text comboText;
+    [SerializeField] TMP_Text wrongText;
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -22,11 +26,15 @@ public class TimedLetter : MonoBehaviour
                 if (Input.GetKeyDown(letter.ToLower()))
                 {
                     audioSource.PlayOneShot(correctSound, transform.position.y);
+                    correctClicks++;
                     GetLetter();
+                    comboText.text = correctClicks.ToString();
                 }
                 else
                 {
                     audioSource.PlayOneShot(wrongSound, transform.position.y);
+                    wrongClicks++;
+                    wrongText.text = wrongClicks.ToString();
                 }
             }
         }
@@ -38,4 +46,9 @@ public class TimedLetter : MonoBehaviour
         letter = c.ToString();
         letterText.text = letter;
     }
+    public (int, int) GetClicks()
+    {
+        return (correctClicks, wrongClicks);
+    }
 }
+

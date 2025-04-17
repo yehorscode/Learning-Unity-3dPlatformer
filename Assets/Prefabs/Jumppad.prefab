@@ -347,6 +347,7 @@ MonoBehaviour:
   jumpForce: 20
   jumpDirection: {x: 0, y: 1, z: 0}
   resetVelocity: 1
+  jumpSound: {fileID: 8300000, guid: fbbb15abb47ab7e5cbe5ce819d65184d, type: 3}
 --- !u!65 &2545305394032155413
 BoxCollider:
   m_ObjectHideFlags: 0

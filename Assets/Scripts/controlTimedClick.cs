@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class controlTimedClick : MonoBehaviour
 {
-    [Header("What object to delete on correct answer")]
-    [SerializeField] GameObject deletingObject;
+    [Header("What objects to delete on correct answer")]
+    [SerializeField] GameObject[] deletingObjects;
 
     ActionsManager actionsManager;
     TimedClick click;
@@ -41,15 +41,18 @@ public class controlTimedClick : MonoBehaviour
         if (click.GetScore() > 3)
         {
             Debug.Log("Score high enough, deleting object...");
-            Invoke("DeleteObject", 1f);
+            Invoke("DeleteObjects", 1f);
         }
     }
 
-    void DeleteObject()
+    void DeleteObjects()
     {
-        if (deletingObject != null)
+        foreach(GameObject obj in deletingObjects)
         {
-            Destroy(deletingObject);
+            if (obj != null)
+            {
+                Destroy(obj);
+            }
         }
     }
 }
