@@ -14,6 +14,8 @@ public class TimedLetter : MonoBehaviour
     [SerializeField] TMP_Text wrongText;
     void Start()
     {
+        correctClicks = 0;
+        wrongClicks = 0;
         audioSource = GetComponent<AudioSource>();
         GetLetter();
     }
@@ -49,6 +51,11 @@ public class TimedLetter : MonoBehaviour
     public (int, int) GetClicks()
     {
         return (correctClicks, wrongClicks);
+    }
+    public void ResetClicks()
+    {
+        wrongClicks = 0;
+        correctClicks = 0;
     }
 }
 
