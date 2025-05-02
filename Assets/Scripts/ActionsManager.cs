@@ -16,6 +16,11 @@ public class ActionsManager : MonoBehaviour
     [Header("Timed Clicks (Slider)")]
     [SerializeField] public bool isTimingClicks = true;
     [SerializeField] GameObject timedClicksCanvas;
+    
+    // Timed Target (moving image target)
+    [Header("Timed Target")]
+    [SerializeField] public bool isTimingTargets = false;
+    [SerializeField] GameObject timedTargetCanvas;
 
     // Texts
     [Header("Info canvas")]
@@ -40,16 +45,17 @@ public class ActionsManager : MonoBehaviour
     void Update()
     {
         TimedActions();
-        if (isTimingClicks || isTimingLetters)
+        if (isTimingClicks || isTimingLetters || isTimingTargets)
         {
             isTimedEvent = true;
         }
-        else if (!isTimingClicks && !isTimingLetters)
+        else if (!isTimingClicks && !isTimingLetters && !isTimingTargets)
         {
             isTimedEvent = false;
         }
     }
     void TimedActions(){
+        // Timing letters
         if (isTimingLetters)
         {
             timedLettersCanvas.SetActive(true);
@@ -58,6 +64,7 @@ public class ActionsManager : MonoBehaviour
         {
             timedLettersCanvas.SetActive(false);
         }
+        // Timing Clicks (slider)
         // Note! To reset it use ResetSlider() from TimedClick.cs
         if (isTimingClicks)
         {
@@ -65,6 +72,14 @@ public class ActionsManager : MonoBehaviour
         }
         else {
             timedClicksCanvas.SetActive(false);
+        }
+        // Timing Targets
+        if (isTimingTargets)
+        {
+            timedTargetCanvas.SetActive(true);
+        }
+        else {
+            timedTargetCanvas.SetActive(false);
         }
     }
     public void ShowWarnText(string content)

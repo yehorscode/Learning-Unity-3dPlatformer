@@ -6,7 +6,8 @@ public class challengeTimedLetter : MonoBehaviour
 {
     [SerializeField] float neededCorrectClicks;
     [SerializeField] float maxWrongClicks;
-
+    [SerializeField] AudioClip completeSound;
+    [SerializeField] AudioClip floatingSound;
     [Header("Option1: Deleting objects")]
     [SerializeField] List<GameObject> objectsToDelete;
 
@@ -14,7 +15,7 @@ public class challengeTimedLetter : MonoBehaviour
     [SerializeField] List<GameObject> objectsToMove;
 
     [Header("Particles")]
-    [SerializeField] List<ParticleSystem> particlesToTrigger;
+    [SerializeField] ParticleSystem doneParticle;
 
     [Header("Player")]
     [SerializeField] ActionsManager actionsManager;
@@ -24,7 +25,8 @@ public class challengeTimedLetter : MonoBehaviour
     bool triggered = false;
     bool isActive = false;
     bool challengeCompleted = false;
-    // Robienie not cinematik
+    bool canRepeat = true;
+
     void Start()
     {
         if (objectsToMove != null && objectsToMove.Count > 0)
@@ -39,9 +41,10 @@ public class challengeTimedLetter : MonoBehaviour
             }
         }
     }
+    
     void OnTriggerEnter(Collider other)
     {
-        if (triggered || challengeCompleted) return;
+        if (triggered || challengeCompleted || !canRepeat) return;
 
         if (other.gameObject == player)
         {
@@ -62,7 +65,7 @@ public class challengeTimedLetter : MonoBehaviour
 
     void Update()
     {
-        if (!isActive || challengeCompleted) return;
+        if (!isActive || challengeCompleted || !canRepeat) return;
 
         (int correctClicks, int wrongClicks) = letter.GetClicks();
 
@@ -79,6 +82,7 @@ public class challengeTimedLetter : MonoBehaviour
     void CompleteChallenge()
     {
         challengeCompleted = true;
+        canRepeat = false;
         isActive = false;
         actionsManager.isTimingLetters = false;
 
@@ -105,6 +109,18 @@ public class challengeTimedLetter : MonoBehaviour
                 {
                     Debug.LogError("ChallengeTimedLetter: Missing Rigidbody on object: " + obj.name);
                 }
+
+                AudioSource objAudio = obj.GetComponent<AudioSource>();
+                if (objAudio != null)
+                {
+                    objAudio.clip = floatingSound;
+                    objAudio.loop = true;
+                    objAudio.Play();
+                }
+                else
+                {
+                    Debug.LogError("ChallengeTimedLetter: Missing AudioSource on object: " + obj.name);
+                }
             }
         }
         else
@@ -112,12 +128,10 @@ public class challengeTimedLetter : MonoBehaviour
             Debug.LogWarning("ChallengeTimedLetter: No objects to delete or move.");
         }
 
-        if (particlesToTrigger != null && particlesToTrigger.Count > 0)
+        if (doneParticle != null)
         {
-            foreach (var particle in particlesToTrigger)
-            {
-                particle.Play();
-            }
+            doneParticle.Play();
+            AudioSource.PlayClipAtPoint(completeSound, transform.position);
         }
     }
 
@@ -126,6 +140,7 @@ public class challengeTimedLetter : MonoBehaviour
         challengeCompleted = false;
         isActive = false;
         actionsManager.isTimingLetters = false;
+        canRepeat = true;
         letter.ResetClicks();
 
         Debug.Log("Challenge failed: too many wrong clicks. Try again!");

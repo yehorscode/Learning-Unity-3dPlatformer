@@ -8,11 +8,13 @@ public class controlTimedClick : MonoBehaviour
 
     ActionsManager actionsManager;
     TimedClick click;
+    [SerializeField] AudioClip doneClip;
 
     private void Start()
     {
         actionsManager = GetComponent<ActionsManager>();
         click = GetComponent<TimedClick>();
+        gameObject.AddComponent<AudioSource>();
     }
 
 
@@ -38,8 +40,9 @@ public class controlTimedClick : MonoBehaviour
 
         Debug.Log("Score is: " + click.GetScore());
 
-        if (click.GetScore() > 3)
-        {
+        if (click.GetScore() >= 3)
+        {   
+            AudioSource.PlayClipAtPoint(doneClip, transform.position);
             Debug.Log("Score high enough, deleting object...");
             Invoke("DeleteObjects", 1f);
         }

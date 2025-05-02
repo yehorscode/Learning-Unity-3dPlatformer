@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+
 public class TimedLetter : MonoBehaviour
 {
     public string letter;
@@ -12,13 +13,19 @@ public class TimedLetter : MonoBehaviour
     int wrongClicks = 0;
     [SerializeField] TMP_Text comboText;
     [SerializeField] TMP_Text wrongText;
+
     void Start()
     {
         correctClicks = 0;
         wrongClicks = 0;
         audioSource = GetComponent<AudioSource>();
         GetLetter();
+        if (correctSound == null || wrongSound == null)
+        {
+            Debug.LogError("TimedLetter: Missing audio clips! NAPRAW!!");
+        }
     }
+
     void Update()
     {
         if (actionsManager.isTimingLetters)
@@ -27,20 +34,33 @@ public class TimedLetter : MonoBehaviour
             {
                 if (Input.GetKeyDown(letter.ToLower()))
                 {
-                    audioSource.PlayOneShot(correctSound, transform.position.y);
+                    PlaySound(correctSound);
                     correctClicks++;
                     GetLetter();
                     comboText.text = correctClicks.ToString();
                 }
                 else
                 {
-                    audioSource.PlayOneShot(wrongSound, transform.position.y);
+                    PlaySound(wrongSound);
                     wrongClicks++;
                     wrongText.text = wrongClicks.ToString();
                 }
             }
         }
     }
+
+    void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogError("Audio source or clip is missing!");
+        }
+    }
+
     public void GetLetter()
     {
         string chars = "abcdefghijklmnopqrstuvwxyz";
@@ -48,10 +68,12 @@ public class TimedLetter : MonoBehaviour
         letter = c.ToString();
         letterText.text = letter;
     }
+
     public (int, int) GetClicks()
     {
         return (correctClicks, wrongClicks);
     }
+
     public void ResetClicks()
     {
         wrongClicks = 0;
