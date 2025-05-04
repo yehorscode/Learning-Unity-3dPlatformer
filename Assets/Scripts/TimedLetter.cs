@@ -30,10 +30,12 @@ public class TimedLetter : MonoBehaviour
     {
         if (actionsManager.isTimingLetters)
         {
+            Debug.Log("TimedLetter: Timing letters is active.");
             if (Input.anyKeyDown)
             {
                 if (Input.GetKeyDown(letter.ToLower()))
                 {
+                    Debug.Log("TimedLetter: Correct key pressed.");
                     PlaySound(correctSound);
                     correctClicks++;
                     GetLetter();
@@ -41,6 +43,7 @@ public class TimedLetter : MonoBehaviour
                 }
                 else
                 {
+                    Debug.Log("TimedLetter: Wrong key pressed.");
                     PlaySound(wrongSound);
                     wrongClicks++;
                     wrongText.text = wrongClicks.ToString();

@@ -14,6 +14,8 @@ public class challengeTimedLetter : MonoBehaviour
     [Header("Option2: Moving objects out of the way")]
     [SerializeField] List<GameObject> objectsToMove;
 
+    [SerializeField] List<GameObject> floatingObjects;
+
     [Header("Particles")]
     [SerializeField] ParticleSystem doneParticle;
 
@@ -46,8 +48,16 @@ public class challengeTimedLetter : MonoBehaviour
     {
         if (triggered || challengeCompleted || !canRepeat) return;
 
+
         if (other.gameObject == player)
         {
+            if (floatingObjects != null && floatingObjects.Count > 0)
+            {
+                for (int i = 0; i < floatingObjects.Count; i++)
+                {
+                    floatingObjects[i].GetComponent<FlyingEnemy>().isFlying = true;
+                }
+            }
             triggered = true;
             isActive = true;
 
@@ -81,10 +91,19 @@ public class challengeTimedLetter : MonoBehaviour
 
     void CompleteChallenge()
     {
+        Debug.Log("CompleteChallenge: Method invoked.");
         challengeCompleted = true;
         canRepeat = false;
         isActive = false;
         actionsManager.isTimingLetters = false;
+
+        if (floatingObjects != null && floatingObjects.Count > 0)
+        {
+            for (int i = 0; i < floatingObjects.Count; i++)
+            {
+                floatingObjects[i].GetComponent<FlyingEnemy>().Kill();
+            }
+        }
 
         if (objectsToDelete != null && objectsToDelete.Count > 0)
         {
@@ -100,14 +119,16 @@ public class challengeTimedLetter : MonoBehaviour
                 var rb = obj.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
+                    Debug.Log("CompleteChallenge: Moving object " + obj.name);
                     rb.isKinematic = false;
                     var direction = new Vector3(Random.Range(-1f, 1f), 0, 0);
                     rb.velocity = direction * Random.Range(0.5f, 1.5f);
                     StartCoroutine(StopMovingAfterDelay(obj, 15f));
+                    Destroy(obj, 10f);
                 }
                 else
                 {
-                    Debug.LogError("ChallengeTimedLetter: Missing Rigidbody on object: " + obj.name);
+                    Debug.LogError("CompleteChallenge: Missing Rigidbody on object: " + obj.name);
                 }
 
                 AudioSource objAudio = obj.GetComponent<AudioSource>();
@@ -125,13 +146,18 @@ public class challengeTimedLetter : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("ChallengeTimedLetter: No objects to delete or move.");
+            Debug.LogWarning("CompleteChallenge: No objects to delete or move.");
         }
 
         if (doneParticle != null)
         {
+            Debug.Log("CompleteChallenge: Playing particle effect.");
             doneParticle.Play();
             AudioSource.PlayClipAtPoint(completeSound, transform.position);
+        }
+        else
+        {
+            Debug.LogWarning("CompleteChallenge: Missing particle effect.");
         }
     }
 

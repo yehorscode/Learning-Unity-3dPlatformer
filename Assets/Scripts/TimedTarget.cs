@@ -11,12 +11,12 @@ public class TimedTarget : MonoBehaviour, IPointerClickHandler
     [SerializeField] AudioClip missSound; 
     [SerializeField] TMP_Text scoreText; // UI element to display the score
     [SerializeField] TMP_Text timerText;
-    [SerializeField] public float gameDuration = 30f; 
+    public float gameDuration; 
 
     private ActionsManager actionsManager;
     private AudioSource audioSource;
-    private int correctClicks = 0;
-    private int wrongClicks = 0;
+    public int correctClicks = 0;
+    public int wrongClicks = 0;
     private float gameTimer;
     private bool gameEnded = false; // Flag to ensure EndGame is called only once
 
@@ -25,15 +25,84 @@ public class TimedTarget : MonoBehaviour, IPointerClickHandler
 
     void Start()
     {
+        gameTimer = gameDuration; // Ustawienie początkowe
         ResetTargetPosition();
         actionsManager = GetComponent<ActionsManager>();
         audioSource = GetComponent<AudioSource>();
-        gameTimer = gameDuration;
 
-        if (hitSound == null || audioSource == null)
+        Debug.Log("TimedTarget: Initialization started.");
+
+        if (hitSound == null)
         {
-            Debug.LogError("TimedTarget: Missing audio clips! Please assign them.");
+            Debug.LogError("TimedTarget: Missing hitSound! Please assign it in the inspector.");
         }
+        if (missSound == null)
+        {
+            Debug.LogError("TimedTarget: Missing missSound! Please assign it in the inspector.");
+        }
+        if (target == null)
+        {
+            Debug.LogError("TimedTarget: Target Image is not assigned in the inspector.");
+        }
+        else
+        {
+            Debug.Log("TimedTarget: Target Image is assigned.");
+        }
+        if (scoreText == null)
+        {
+            Debug.LogError("TimedTarget: ScoreText is not assigned in the inspector.");
+        }
+        else
+        {
+            Debug.Log("TimedTarget: ScoreText is assigned.");
+        }
+        if (timerText == null)
+        {
+            Debug.LogError("TimedTarget: TimerText is not assigned in the inspector.");
+        }
+        else
+        {
+            Debug.Log("TimedTarget: TimerText is assigned.");
+        }
+        if (audioSource == null)
+        {
+            Debug.LogError("TimedTarget: AudioSource component is missing.");
+        }
+        else
+        {
+            Debug.Log("TimedTarget: AudioSource component is present.");
+        }
+
+        // Ensure the target has a Canvas and Graphic Raycaster for click detection
+        if (target != null)
+        {
+            Canvas canvas = target.GetComponentInParent<Canvas>();
+            if (canvas == null)
+            {
+                Debug.LogError("TimedTarget: Target must be inside a Canvas for proper functionality.");
+            }
+            else
+            {
+                Debug.Log("TimedTarget: Canvas is properly assigned.");
+            }
+
+            if (canvas.renderMode != RenderMode.ScreenSpaceOverlay && canvas.worldCamera == null)
+            {
+                Debug.LogError("TimedTarget: The Canvas must have a worldCamera assigned if not in ScreenSpaceOverlay mode.");
+            }
+
+            GraphicRaycaster raycaster = canvas.GetComponent<GraphicRaycaster>();
+            if (raycaster == null)
+            {
+                Debug.LogError("TimedTarget: Canvas must have a Graphic Raycaster component.");
+            }
+            else
+            {
+                Debug.Log("TimedTarget: Graphic Raycaster is present.");
+            }
+        }
+
+        Debug.Log("TimedTarget: Initialization completed.");
 
         // Reset target every timeToMove seconds
         InvokeRepeating(nameof(ResetTargetPosition), timeToMove, timeToMove);
@@ -123,6 +192,10 @@ public class TimedTarget : MonoBehaviour, IPointerClickHandler
 
     public void StartTargetClicks()
     {
+        if (gameTimer <= 0) // Ustaw timer tylko, jeśli gra się zakończyła
+        {
+            gameTimer = gameDuration;
+        }
         InvokeRepeating(nameof(ResetTargetPosition), timeToMove, timeToMove);
         ResetTargetClicks();
     }
@@ -147,6 +220,4 @@ public class TimedTarget : MonoBehaviour, IPointerClickHandler
         actionsManager.isTimingTargets = false;
     }
 }
-
-
 

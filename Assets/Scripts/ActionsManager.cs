@@ -38,6 +38,31 @@ public class ActionsManager : MonoBehaviour
     [SerializeField] public bool showInfoText = false;
     void Start()
     {
+        if (timedLettersCanvas == null)
+        {
+            Debug.LogError("ActionsManager: Missing timedLettersCanvas! Please assign it in the inspector.");
+        }
+        if (timedClicksCanvas == null)
+        {
+            Debug.LogError("ActionsManager: Missing timedClicksCanvas! Please assign it in the inspector.");
+        }
+        if (timedTargetCanvas == null)
+        {
+            Debug.LogError("ActionsManager: Missing timedTargetCanvas! Please assign it in the inspector.");
+        }
+        if (infoCanvas == null)
+        {
+            Debug.LogError("ActionsManager: Missing infoCanvas! Please assign it in the inspector.");
+        }
+        if (warnText == null)
+        {
+            Debug.LogError("ActionsManager: Missing warnText! Please assign it in the inspector.");
+        }
+        if (infoText == null)
+        {
+            Debug.LogError("ActionsManager: Missing infoText! Please assign it in the inspector.");
+        }
+
         infoCanvas.SetActive(false);
         infoText.text = "";
         warnText.text = "";

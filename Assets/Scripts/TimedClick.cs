@@ -15,6 +15,24 @@ public class TimedClick : MonoBehaviour
 
     void Start()
     {
+        // Add checks for serialized fields here
+        if (slider == null)
+        {
+            Debug.LogError("TimedClick: Missing slider! Please assign it in the inspector.");
+        }
+        if (clickSound == null)
+        {
+            Debug.LogError("TimedClick: Missing clickSound! Please assign it in the inspector.");
+        }
+        if (audioSource == null)
+        {
+            Debug.LogError("TimedClick: Missing audioSource! Please assign it in the inspector.");
+        }
+        if (actionsManager == null)
+        {
+            Debug.LogError("TimedClick: Missing actionsManager! Please assign it in the inspector.");
+        }
+
         slider.minValue = 0f;
         slider.maxValue = 100f;
         slider.value = 0f;
