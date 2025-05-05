@@ -96,7 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 35c4944a63cbc3903832972cb9cc5300,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -23563,6 +23564,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3734237313388100966, guid: 2c7f75fae952d0e828e81d2e6c15fa28,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5122347269333886619, guid: 2c7f75fae952d0e828e81d2e6c15fa28,
         type: 3}
       propertyPath: m_Name
@@ -23571,17 +23577,17 @@ PrefabInstance:
     - target: {fileID: 7975982187489540169, guid: 2c7f75fae952d0e828e81d2e6c15fa28,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.15
+      value: -0.35
       objectReference: {fileID: 0}
     - target: {fileID: 7975982187489540169, guid: 2c7f75fae952d0e828e81d2e6c15fa28,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.2
+      value: 3.29
       objectReference: {fileID: 0}
     - target: {fileID: 7975982187489540169, guid: 2c7f75fae952d0e828e81d2e6c15fa28,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -60.56
+      value: -61.54
       objectReference: {fileID: 0}
     - target: {fileID: 7975982187489540169, guid: 2c7f75fae952d0e828e81d2e6c15fa28,
         type: 3}
@@ -26427,12 +26433,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1894145996}
   neededCorrectClicks: 5
-  maxWrongClicks: 3
-  gameDuration: 10
+  maxWrongClicks: 5
+  gameDuration: 20
   deletingObjects:
   - {fileID: 1964800468}
   aveMaria: {fileID: 8300000, guid: b3f4e944d7f177af78f82b5813849525, type: 3}
   completeSound: {fileID: 8300000, guid: a78d267487fb61544828bd51bc5a7997, type: 3}
+  audioSource: {fileID: 1894145998}
 --- !u!65 &1443066527
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34121,6 +34128,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1252485417}
   m_PrefabAsset: {fileID: 0}
+--- !u!82 &1894145998 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1958678736973755082, guid: 2c7f75fae952d0e828e81d2e6c15fa28,
+    type: 3}
+  m_PrefabInstance: {fileID: 1252485417}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1932732993
 Mesh:
   m_ObjectHideFlags: 0
@@ -35567,7 +35580,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0

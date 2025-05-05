@@ -36,9 +36,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] bool logicOverride = false;
     [SerializeField] Camera forwardCamera;
     [SerializeField] Camera backCamera;
-    [SerializeField] Camera leftCamera;
-    [SerializeField] Camera rightCamera;
-
     [Header("Scripts")]
     public ActionsManager actionsManager;
     public TimedLetter timedLetter;
@@ -53,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
         timedLetter = GetComponent<TimedLetter>();
         playerManager = GetComponent<PlayerManager>();
         vignetteEffect = GetComponent<VignetteEffect>();
+        forwardCamera.enabled = true;
+        backCamera.enabled = true;
     }
 
     void Update()
@@ -190,32 +189,27 @@ public class PlayerMovement : MonoBehaviour
 
     void EnableOnlyCamera(Camera camToEnable)
     {
-        DisableAllCameras(camToEnable);
+        if (camToEnable == null)
+        {
+            Debug.LogWarning("Camera to enable is null.");
+            return;
+        }
 
-        if (camToEnable != null)
-            camToEnable.enabled = true;
+        DisableAllCameras(camToEnable);
+        camToEnable.enabled = true;
     }
 
     void DisableAllCameras(Camera camToNotDisable)
     {
-        if (forwardCamera != camToNotDisable)
+
+        if (forwardCamera != null && forwardCamera != camToNotDisable)
         {
             forwardCamera.enabled = false;
         }
 
-        if (backCamera != camToNotDisable)
+        if (backCamera != null && backCamera != camToNotDisable)
         {
             backCamera.enabled = false;
-        }
-
-        if (leftCamera != camToNotDisable)
-        {
-            leftCamera.enabled = false;
-        }
-
-        if (rightCamera != camToNotDisable)
-        {
-            rightCamera.enabled = false;
         }
     }
 

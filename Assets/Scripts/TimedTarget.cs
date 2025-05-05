@@ -17,8 +17,7 @@ public class TimedTarget : MonoBehaviour, IPointerClickHandler
     private AudioSource audioSource;
     public int correctClicks = 0;
     public int wrongClicks = 0;
-    private float gameTimer;
-    private bool gameEnded = false; // Flag to ensure EndGame is called only once
+    public float gameTimer;
 
     public int neededCorrectClicks = 10;
     public int maxWrongClicks = 5;
@@ -103,25 +102,14 @@ public class TimedTarget : MonoBehaviour, IPointerClickHandler
         }
 
         Debug.Log("TimedTarget: Initialization completed.");
-
-        // Reset target every timeToMove seconds
-        InvokeRepeating(nameof(ResetTargetPosition), timeToMove, timeToMove);
     }
 
     void Update()
     {
-        if (gameTimer > 0 && !gameEnded)
+        if (gameTimer > 0)
         {
             gameTimer -= Time.deltaTime;
-
-            // Check if requirements are met or exceeded
-            if (HasMetClickRequirements() || HasExceededWrongClicks())
-            {
-                EndGame();
-                return;
-            }
-
-            if (gameTimer <= 0)
+            if (gameTimer <= 0 || HasExceededWrongClicks())
             {
                 EndGame();
             }
@@ -192,12 +180,10 @@ public class TimedTarget : MonoBehaviour, IPointerClickHandler
 
     public void StartTargetClicks()
     {
-        if (gameTimer <= 0) // Ustaw timer tylko, jeśli gra się zakończyła
-        {
-            gameTimer = gameDuration;
-        }
+        gameTimer = gameDuration;
+        correctClicks = 0;
+        wrongClicks = 0;
         InvokeRepeating(nameof(ResetTargetPosition), timeToMove, timeToMove);
-        ResetTargetClicks();
     }
 
     public bool HasMetClickRequirements()
@@ -212,12 +198,14 @@ public class TimedTarget : MonoBehaviour, IPointerClickHandler
 
     public void EndGame()
     {
-        if (gameEnded) return; // Prevent multiple calls
-
-        gameEnded = true;
         CancelInvoke(nameof(ResetTargetPosition));
         Debug.Log($"Game Over! Final Score: {correctClicks} | Misses: {wrongClicks}");
-        actionsManager.isTimingTargets = false;
+        
+        // Don't set isTimingTargets here, let the challenge manager handle it
+        if (HasMetClickRequirements())
+        {
+            Debug.Log("Game completed successfully!");
+        }
     }
 }
 
